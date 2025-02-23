@@ -21,3 +21,22 @@ export const fetchMovies = async (searchTerm) => {
     throw new Error("Error fetching movies.");
   }
 };
+
+export const fetchMoviesById = async (id) => {
+  try {
+    const response = await axios.get(API_URL, {
+      params: {
+        apikey: API_KEY,
+        i: id,
+      },
+    });
+
+    if (response.data.Response === "True") {
+      return response.data;
+    } else {
+      throw new Error("No movies found.");
+    }
+  } catch (error) {
+    throw new Error("Error fetching movies.");
+  }
+};
