@@ -8,15 +8,23 @@ const MovieContext = createContext();
 export const MovieProvider = ({ children }) => {
   const [movie, setMovie] = useState(null);
   const [movies, setMovies] = useState([]);
+  const [lastPage, setLastPage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
 
-  const searchMovies = useCallback(async (query) => {
+  const searchMovies = useCallback(async (query, page = 1) => {
     setLoading(true);
     setError("");
     try {
-      const movies = await fetchMovies(query);
-      setMovies(movies);
+      const data = await fetchMovies(query, page);
+      const movies = data.Search;
+      setLastPage(Math.ceil(data.totalResults / 10));
+      if (movies.length > 0) {
+        setMovies((prevMovies) =>
+          page === 1 ? movies : [...prevMovies, ...movies]
+        );
+      }
     } catch (error) {
       setError(
         <span>
@@ -43,18 +51,29 @@ export const MovieProvider = ({ children }) => {
     }
   }, []);
 
+  const replacementImage =
+    "https://m.media-amazon.com/images/M/MV5BMWQ3NjA3NTYtNDJiYi00ZTE0LWFmNzMtZjc0NTUxNjk2YTFkXkEyXkFqcGc@._V1_SX300.jpg";
+
+  const validImage = (imageSource) => {
+    return imageSource === "N/A" ? replacementImage : imageSource;
+  };
+
   return (
     <MovieContext.Provider
       value={{
         movie,
         movies,
         setMovies,
+        page,
+        setPage,
+        lastPage,
         loading,
         setLoading,
         error,
         setError,
         searchMovies,
         searchMovieById,
+        validImage,
       }}
     >
       {children}

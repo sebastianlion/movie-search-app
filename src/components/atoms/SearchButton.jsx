@@ -3,7 +3,7 @@ import "../../styles/components/SearchButton.css";
 
 const SearchButton = ({ onClick }) => {
   return (
-    <button className="seach-button" onClick={onClick}>
+    <button className="search-button" onClick={onClick}>
       Search
     </button>
   );

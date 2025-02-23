@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import "../styles/pages/MovieDetails.css";
 
 import { useMovies } from "../context/MovieContext";
-import { fetchMoviesById } from "../services/movieService";
+import Loading from "../components/atoms/Loading";
+import Error from "../components/atoms/Error";
 
 const MovieDetails = () => {
   const { id } = useParams();
-  const { searchMovieById, movie, loading, error } = useMovies();
+  const { searchMovieById, movie, loading, error, validImage } = useMovies();
 
   useEffect(() => {
     searchMovieById(id);
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <Loading />;
+  if (error) return <Error>{error}</Error>;
   if (movie)
     return (
       <div className="movie-details">
@@ -25,7 +26,7 @@ const MovieDetails = () => {
           </Link>
           <h2 className="movie-details__title">{movie.Title}</h2>
           <img
-            src={movie.Poster}
+            src={validImage(movie.Poster)}
             alt={movie.Title}
             className="movie-details__poster"
           />
@@ -56,20 +57,6 @@ const MovieDetails = () => {
         </div>
       </div>
     );
-
-  // return (
-  //   <div>
-  //     <Link to="/" className="movie-details__back-button">
-  //       Back to Search
-  //     </Link>
-  //     <h2>{movie.Title}</h2>
-  //     <img src={movie.Poster} alt={movie.Title} className="" />
-  //     <p className="movie-details__plot">{movie.Plot}</p>
-  //     <p className="movie-details__genre">{movie.Genre}</p>
-  //     <p className="movie-details__runtime">{movie.Runtime}</p>
-  //     <p className="movie-details__rating">{movie.imdbRating}</p>
-  //   </div>
-  // );
 };
 
 export default MovieDetails;

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import "../../styles/components/SearchInput.css";
 
-const SearchInput = ({ value, onChange }) => {
+const SearchInput = ({ value, onChange, onKeyDown }) => {
   return (
     <input
       type="text"
@@ -9,6 +9,7 @@ const SearchInput = ({ value, onChange }) => {
       placeholder="Search for a movie..."
       value={value}
       onChange={onChange}
+      onKeyDown={onKeyDown}
     />
   );
 };
@@ -16,6 +17,7 @@ const SearchInput = ({ value, onChange }) => {
 SearchInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired,
 };
 
 export default SearchInput;

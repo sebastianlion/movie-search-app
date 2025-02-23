@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import "../../styles/components/SearchBar.css";
 
@@ -7,22 +7,43 @@ import SearchInput from "../atoms/SearchInput";
 import SearchButton from "../atoms/SearchButton";
 
 const SearchBar = () => {
-  const { searchMovies } = useMovies();
+  const { searchMovies, page, setPage, setMovies, error, setError } =
+    useMovies();
 
   const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (query.trim() !== "") {
-        searchMovies(query);
+  const handleSearch = useCallback(() => {
+    if (query.trim() !== "") {
+      if (error) {
+        setMovies([]);
+        setPage(1);
       }
-    }, 500);
-  }, [query]);
+      searchMovies(query, page);
+    } else {
+      setMovies([]);
+      setError("");
+      setPage(1);
+    }
+  }, [query, page]);
+
+  useEffect(() => {
+    handleSearch();
+  }, [handleSearch]);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   return (
     <div className="search-bar">
-      <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
-      {/* <SearchButton onClick={() => console.log("Button clicked")} /> */}
+      <SearchInput
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
+      />
+      <SearchButton onClick={() => handleSearch()} />
     </div>
   );
 };
