@@ -1,0 +1,16 @@
+.home {
+    text-align: center;
+    padding: 2rem;
+}
+
+.home__title {
+    font-size: 2rem;
+    color: #333;
+}
+
+.home__movie-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
